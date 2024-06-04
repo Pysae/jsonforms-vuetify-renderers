@@ -1,36 +1,82 @@
-# JSON Forms Vuetify renderers
+# JSON Forms - More Forms. Less Code
 
-This is a monorepo containing the JSON Forms Vue 2 Vuetify renderers and an example application.
+_Complex Forms in the blink of an eye_
 
-See [jsonforms-vuetify-renderers.netlify.app](https://jsonforms-vuetify-renderers.netlify.app) for the deployed example application.
+JSON Forms eliminates the tedious task of writing fully-featured forms by hand by leveraging the capabilities of JSON, JSON Schema and Javascript.
 
-## JSON Forms
+## Vue Vuetify Renderers
 
-See [jsonforms.io](https://jsonforms.io/) and the [main repository](https://github.com/eclipsesource/jsonforms) for more information about JSON Forms.
+This is the JSON Forms Vue Vuetify renderers package which provides a Vuetify based renderer set for [JSON Forms Vue](https://github.com/eclipsesource/jsonforms/blob/master/packages/vue/vue).
+The renderers are in a preview state.
 
-## Vue2 Vuetify renderer set
+### Quick start
 
-See the [README](https://github.com/eclipsesource/jsonforms-vuetify-renderers/blob/main/vue2-vuetify/README.md) of the Vue 2 Vuetify renderer set for detailed instructions on how to consume and use the JSON Forms Vue 2 Vuetify renderer set.
+Install JSON Forms Core, Vue 3 and Vue 3 Vuetify Renderers.
 
-## Developer documentation
+```bash
+npm i --save @jsonforms/core @jsonforms/vue @jsonforms/vue-vuetify
+```
 
-Use Node 12+
+Also add the packages to the transpile dependencies in the `vue.config.js` file:
 
-### Initial setup
+```js
+module.exports = {
+    transpileDependencies: ['@jsonforms/core', '@jsonforms/vue', '@jsonforms/vue-vuetify']
+}
+```
 
-- Install monorepo dependencies: `npm ci`
-- Hook up dependencies between packages: `npm run init`
+Use the `json-forms` component for each form you want to render and hand over the renderer set.
 
-### Scripts
+```vue
+<script>
+import { JsonForms } from '@jsonforms/vue';
+import { vuetifyRenderers } from '@jsonforms/vue-vuetify';
 
-- Build the renderer set: `npm run build`
-- Build and watch the renderer set: `npm run watch`
-- Remove build artifacts: `npm run clean`
-- Run example app: `npm run example:serve`
-- Build example app for production: `npm run example:build`
+const renderers = [
+  ...vuetifyRenderers,
+  // here you can add custom renderers
+];
 
-Recommendations:
+export default defineComponent({
+  name: 'app',
+  components: {
+    JsonForms,
+  },
+  data() {
+    return {
+      renderers: Object.freeze(renderers),
+      data,
+      schema,
+      uischema,
+    };
+  },
+  methods: {
+    onChange(event) {
+      this.data = event.data;
+    },
+  },
+});
+</script>
 
-- For development use `npm run watch` combined with `npm run example:serve`.
-- To test production use `npm run build` combined with `npm run example:build`.
-  Then serve the built application from `example/dist` with a web server of your choice, e.g. `npx http-server example/dist`.
+<template>
+  <json-forms
+    :data="data"
+    :schema="schema"
+    :uischema="uischema"
+    :renderers="renderers"
+    @change="onChange"
+  />
+</template>
+
+<style scoped>
+@import '~@jsonforms/vue-vuetify/lib/jsonforms-vue-vuetify.esm.css';
+</style>
+```
+
+If note done yet, please [install Vuetify for Vue](https://vuetifyjs.com/en/getting-started/installation/).
+
+For more information on how JSON Forms can be configured, please see the [README of `@jsonforms/vue`](https://github.com/eclipsesource/jsonforms/blob/master/packages/vue/vue/README.md).
+
+## License
+
+The JSONForms project is licensed under the MIT License. See the [LICENSE file](https://github.com/eclipsesource/jsonforms/blob/master/LICENSE) for more information.
